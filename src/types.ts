@@ -48,8 +48,8 @@ export interface Certificate {
 export interface Artwork {
   id: string;
   title: string;
-  medium: string;
-  year: string;
+  medium?: string;
+  year?: string;
   dimensions?: string;
   description?: string;
   image?: string;

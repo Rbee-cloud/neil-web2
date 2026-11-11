@@ -44,8 +44,8 @@ export const PROJECTS: Project[] = [
       'Recipient of the prestigious international Diana Award (2026) for youth humanitarian and community action.'
     ],
     desc: [
-      'A youth-led initiative in Caldas da Rainha working on food waste and on bringing younger and older people in town together. It runs three projects: BioRainha (composting), Art Caldas and Me Leve.',
-      "So far we've worked with 8 schools and around 500 people, and saved over 1,000 meals. The town council adopted BioRainha and gave us a community plot for it. Leve received the Diana Award in 2026."
+      'A youth-led initiative working on food waste and on bringing younger and older people in town together. It runs three projects: Composting, Art Caldas and Me Leve.',
+      "So far we've worked with 8 schools and around 500 people, and saved over 1,000 meals. Leve received the Diana Award in 2026."
     ]
   },
   {
@@ -64,8 +64,8 @@ export const PROJECTS: Project[] = [
       'Recognized with the CREST Gold Award from the British Science Association.'
     ],
     desc: [
-      'A small semi-autonomous buoy that measures temperature, turbidity, conductivity, pH and water level in rivers and lakes, so local water quality can be tracked in real time.',
-      'It was a finalist for the Bright Future Global Prize and received a CREST Gold Award from the British Science Association.'
+      'A semi-autonomous buoy (patent-pending) that measures temperature, turbidity, conductivity, pH and water level in rivers and lakes, so local water quality can be tracked in real time.',
+      'It was a finalist for the Bright Future Global Prize (awarded €5000) and received a CREST Gold Award from the British Science Association.'
     ]
   }
 ];
@@ -427,74 +427,42 @@ export const DEFAULT_ARTWORKS: Artwork[] = [
   {
     id: 'art-1',
     title: 'Niggle',
-    medium: 'Watercolor & India ink on cold-press paper',
-    year: '2025',
-    dimensions: '42 × 59 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-1' ] || 'https://i.imgur.com/3f4efqo.png',
-    description: 'Topographic contour and sedimentation study mapping wetland river hydrology and organic runoff near Caldas da Rainha.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-1' ] || 'https://i.imgur.com/3f4efqo.png'
   },
   {
     id: 'art-2',
     title: 'The Weight of a Cloud, Brazil',
-    medium: 'Oil and cold wax on linen canvas',
-    year: '2025',
-    dimensions: '60 × 80 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-2' ] || 'https://i.imgur.com/09jVp96.jpeg',
-    description: 'Atmospheric light study capturing dusk temperature differentials and brackish water reflections at the coastal inlet.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-2' ] || 'https://i.imgur.com/09jVp96.jpeg'
   },
   {
     id: 'art-3',
     title: 'The Weight of a Cloud, Amazon',
-    medium: 'Charcoal, iron oxide wash & organic sediment',
-    year: '2024',
-    dimensions: '30 × 40 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-3' ] || 'https://i.imgur.com/P8s3Sq9.jpeg',
-    description: 'Textural exploration created during community composting cycles with BioRainha, examining macro and micro organic decay.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-3' ] || 'https://i.imgur.com/P8s3Sq9.jpeg'
   },
   {
     id: 'art-4',
     title: 'The Weight of a Cloud, Amazon Fire',
-    medium: 'Carbon ink, graphite & wash on Japanese Kozo paper',
-    year: '2025',
-    dimensions: '45 × 45 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-4' ] || 'https://i.imgur.com/umWRSLc.jpeg',
-    description: 'Mathematical visual inquiry inspired by dynamical systems theory, phase space trajectories, and thermodynamic entropy.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-4' ] || 'https://i.imgur.com/umWRSLc.jpeg'
   },
   {
     id: 'art-5',
     title: 'The Weight of a Cloud, Brazil',
-    medium: 'Clay slip, natural terracotta pigment & mineral glaze',
-    year: '2024',
-    dimensions: '35 × 50 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-5' ] || 'https://i.imgur.com/FmK9yJx.jpeg',
-    description: 'Homage to the ceramic heritage of Caldas da Rainha (Bordallo Pinheiro tradition) fused with modern geological stratification.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-5' ] || 'https://i.imgur.com/FmK9yJx.jpeg'
   },
   {
     id: 'art-6',
     title: 'StarGazer',
-    medium: 'Acrylic, soft pastel & pumice on canvas',
-    year: '2026',
-    dimensions: '70 × 90 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-6' ] || 'https://i.imgur.com/zIp3qXS.jpeg',
-    description: 'High-contrast seascape exploring coastal marine fog rolling over limestone cliffs at the western perimeter.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-6' ] || 'https://i.imgur.com/zIp3qXS.jpeg'
   },
   {
     id: 'art-7',
     title: 'Harpyja',
-    medium: 'Linocut relief print on Arches cotton paper (Edition of 12)',
-    year: '2025',
-    dimensions: '30 × 30 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-7' ] || 'https://i.imgur.com/kKdwtk1.png',
-    description: 'Geometric recurring motifs derived from tidal creek branching algorithms and salt marsh plant roots.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-7' ] || 'https://i.imgur.com/kKdwtk1.png'
   },
   {
     id: 'art-8',
     title: 'The Weight of a Cloud, India',
-    medium: 'Cyanotype photogram & silver leaf on handmade paper',
-    year: '2026',
-    dimensions: '40 × 60 cm',
-    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-8' ] || 'https://i.imgur.com/qiKQBAF.jpeg',
-    description: 'Sun-exposed chemical print overlaid with acoustic frequency recordings taken during sensor buoy field testing.'
+    image: (persistedPhotos.artworks as Record<string, string>)?.[ 'art-8' ] || 'https://i.imgur.com/qiKQBAF.jpeg'
   }
 ];
 

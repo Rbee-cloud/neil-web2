@@ -209,15 +209,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, accen
     DEFAULT_ARTWORKS.forEach((art) => {
       if (
         art.title.toLowerCase().includes(q) ||
-        art.medium.toLowerCase().includes(q) ||
-        (art.description && art.description.toLowerCase().includes(q))
+        (art.medium && art.medium.toLowerCase().includes(q))
       ) {
         items.push({
           id: art.id,
           title: art.title,
-          subtitle: `${art.medium} (${art.year})`,
+          subtitle: art.medium || 'Artwork',
           category: 'Artwork',
-          desc: art.description,
           targetSection: '#art'
         });
       }

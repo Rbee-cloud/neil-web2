@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Palette, Upload, Eye, X, ExternalLink, Link as LinkIcon, Check, Image as ImageIcon, Maximize2, Sparkles, Loader2, Globe } from 'lucide-react';
 import { DEFAULT_ARTWORKS } from '../data';
 import { Artwork } from '../types';
-import { useContent } from '../context/ContentContext';
 import { compressImage } from '../utils/imageCompressor';
 import { persistPhoto, loadPersistedPhoto, removePersistedPhoto, fetchAllPersistedPhotos } from '../utils/storage';
 
@@ -11,17 +10,14 @@ interface ArtSectionProps {
 }
 
 export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
-  const { isEditMode } = useContent();
 
-  // Load saved artwork images and text customizations from localStorage
+  // Load saved artwork images and titles
   const [artworks, setArtworks] = useState<Artwork[]>(() => {
     return DEFAULT_ARTWORKS.map((art) => {
       const savedImage = localStorage.getItem(`anb_art_${art.id}`);
-      const savedMeta = localStorage.getItem(`anb_art_meta_${art.id}`);
-      const parsedMeta = savedMeta ? JSON.parse(savedMeta) : {};
       return {
-        ...art,
-        ...parsedMeta,
+        id: art.id,
+        title: art.title,
         image: savedImage || art.image
       };
     });
@@ -35,8 +31,14 @@ export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
   const [isCompressing, setIsCompressing] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Hydrate persisted artwork photos from IndexedDB/Server if localStorage was cleared
+  // Hydrate persisted artwork photos from IndexedDB/Server and clear stale description metadata
   useEffect(() => {
+    DEFAULT_ARTWORKS.forEach((art) => {
+      try {
+        localStorage.removeItem(`anb_art_meta_${art.id}`);
+      } catch (_) {}
+    });
+
     fetchAllPersistedPhotos().then((serverPhotos) => {
       if (serverPhotos?.artworks) {
         setArtworks((prev) =>
@@ -78,26 +80,6 @@ export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
     setTimeout(() => setFeedback(''), 3000);
   };
 
-  // Update text metadata in state and localStorage
-  const handleUpdateArtField = (artId: string, field: 'title' | 'medium' | 'dimensions' | 'description' | 'year', value: string) => {
-    setArtworks((prev) => {
-      const updated = prev.map((a) => (a.id === artId ? { ...a, [field]: value } : a));
-      const target = updated.find((a) => a.id === artId);
-      if (target) {
-        localStorage.setItem(
-          `anb_art_meta_${artId}`,
-          JSON.stringify({
-            title: target.title,
-            medium: target.medium,
-            dimensions: target.dimensions,
-            description: target.description,
-            year: target.year
-          })
-        );
-      }
-      return updated;
-    });
-  };
 
   // File upload reader with automatic image compression
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -226,69 +208,19 @@ export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
                     )}
 
                     {/* Badge Pill for Year */}
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-medium tracking-wide">
-                      {art.year}
-                    </div>
-
-                    {art.dimensions && (
-                      <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-medium">
-                        {art.dimensions}
+                    {art.year && (
+                      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-medium tracking-wide">
+                        {art.year}
                       </div>
                     )}
                   </div>
 
                   {/* Artwork Metadata */}
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
                       <h4 className="text-lg font-bold text-gray-900 group-hover:text-black leading-snug">
-                        {isEditMode ? (
-                          <span
-                            contentEditable
-                            suppressContentEditableWarning
-                            onBlur={(e) => handleUpdateArtField(art.id, 'title', e.currentTarget.innerText.trim())}
-                            className="outline-dashed outline-1 outline-blue-400 hover:outline-blue-600 px-1 py-0.5 rounded cursor-text"
-                            title="Click to edit artwork title"
-                          >
-                            {art.title}
-                          </span>
-                        ) : (
-                          art.title
-                        )}
+                        {art.title}
                       </h4>
-
-                      <p className="text-xs text-gray-600 font-medium mt-1">
-                        {isEditMode ? (
-                          <span
-                            contentEditable
-                            suppressContentEditableWarning
-                            onBlur={(e) => handleUpdateArtField(art.id, 'medium', e.currentTarget.innerText.trim())}
-                            className="outline-dashed outline-1 outline-blue-400 hover:outline-blue-600 px-1 py-0.5 rounded cursor-text"
-                            title="Click to edit artwork medium"
-                          >
-                            {art.medium}
-                          </span>
-                        ) : (
-                          art.medium
-                        )}
-                      </p>
-
-                      {art.description && (
-                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                          {isEditMode ? (
-                            <span
-                              contentEditable
-                              suppressContentEditableWarning
-                              onBlur={(e) => handleUpdateArtField(art.id, 'description', e.currentTarget.innerText.trim())}
-                              className="outline-dashed outline-1 outline-blue-400 hover:outline-blue-600 px-1 py-0.5 rounded cursor-text block"
-                              title="Click to edit artwork description"
-                            >
-                              {art.description}
-                            </span>
-                          ) : (
-                            art.description
-                          )}
-                        </p>
-                      )}
                     </div>
 
                     {/* Card Footer Actions */}
@@ -413,12 +345,9 @@ export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-gray-50">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
               <div>
-                <h4 className="text-base font-bold text-gray-900">{lightboxArt.title}</h4>
-                <p className="text-xs text-gray-500">
-                  {lightboxArt.medium} {lightboxArt.dimensions ? `· ${lightboxArt.dimensions}` : ''} · {lightboxArt.year}
-                </p>
+                <h4 className="text-lg font-bold text-gray-900">{lightboxArt.title}</h4>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -432,27 +361,19 @@ export const ArtSection: React.FC<ArtSectionProps> = ({ accentColor }) => {
             </div>
 
             {/* Artwork Canvas Large View */}
-            <div className="p-4 sm:p-6 overflow-auto max-h-[75vh] flex items-center justify-center bg-gray-900">
+            <div className="p-4 sm:p-6 overflow-auto max-h-[82vh] flex items-center justify-center bg-gray-900">
               {lightboxArt.image ? (
                 <img
                   src={lightboxArt.image}
                   alt={lightboxArt.title}
-                  className="max-h-[70vh] w-auto object-contain rounded shadow-lg"
+                  className="max-h-[78vh] w-auto object-contain rounded shadow-lg"
                 />
               ) : (
                 <div className="w-full max-w-lg aspect-[4/3] bg-gray-800 rounded-lg p-8 flex flex-col items-center justify-center text-center text-gray-300">
                   <Palette className="w-12 h-12 mb-3 text-gray-500" />
                   <h5 className="text-lg font-bold text-white mb-1">{lightboxArt.title}</h5>
-                  <p className="text-xs text-gray-400">{lightboxArt.medium} ({lightboxArt.year})</p>
                 </div>
               )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 py-3.5 border-t border-gray-200 bg-gray-50 flex items-center justify-between text-xs text-gray-600">
-              <span className="max-w-[700px] leading-relaxed">
-                {lightboxArt.description || 'Original artwork by Aditya Neil Banerjee.'}
-              </span>
             </div>
           </div>
         </div>

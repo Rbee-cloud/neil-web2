@@ -64,15 +64,15 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     ctaText: "A bit more about me"
   },
   about: {
-    p1: "I like figuring out how things work — markets, rivers, sentences — and then trying to make something useful with what I learn.",
-    p2: "I grew up in São Paulo, Brazil, and now live in Caldas da Rainha, a small town in Portugal, where I study at Stanford Online High School. Most of what I do started close to home: a composting project, a buoy that checks the water in local rivers, tutoring kids in math.",
-    p3: "At school I'm drawn to economics, math and computer science. Outside of it, I write. I edit our school newspaper and write poetry, sometimes about math.",
+    p1: "I like figuring out how things work, whether markets, river-robots, or sentences, and then trying to make something useful with what I learn.",
+    p2: "I grew up in São Paulo, Brazil, and now live in a small town in Portugal, where I study at Stanford Online High School. Most of what I do started close to home: a composting project, a buoy that checks the water-quality in local rivers, tutoring kids in math and adults in art.",
+    p3: "At school I'm drawn to economics, math and computer science. Outside of it, I compost, illustrate and write. I edit our school newspaper and write poetry, sometimes about math and at other times about the beauty of bogs.",
     originsTitle: "Origins",
     originsDesc: "São Paulo, Brazil → Caldas da Rainha, Portugal",
     educationTitle: "Education",
     educationDesc: "Stanford Online High School · Senior",
     interestsTitle: "Interests",
-    interestsDesc: "Causal Inference, Policy & Creative Writing"
+    interestsDesc: "Public Policy, Economics, Building & Creative Writing"
   },
   work: {
     projects: PROJECTS,
@@ -113,7 +113,7 @@ interface ContentContextType {
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'anb_site_content_v2';
+const STORAGE_KEY = 'anb_site_content_v4';
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<SiteContent>(() => {
@@ -140,6 +140,12 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Hydrate from server /site-content.json if visiting published site or new device
   useEffect(() => {
+    ['anb_site_content', 'anb_site_content_v2', 'anb_site_content_v3'].forEach((k) => {
+      try {
+        localStorage.removeItem(k);
+      } catch (_) {}
+    });
+
     fetch('/site-content.json')
       .then((res) => (res.ok ? res.json() : null))
       .then((serverData) => {
